@@ -1,0 +1,7 @@
+
+#
+# file attributes for Git
+#
+
+# Datapack Definition
+*.dpd linguist-language=INI

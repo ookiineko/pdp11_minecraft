@@ -1,0 +1,10 @@
+
+#
+# datapack definitions
+#
+
+[Datapack]
+namespace=libpdp11
+description=Shared library for PDP-11 emulator.
+place location=0 0 0
+generate cleanup=true

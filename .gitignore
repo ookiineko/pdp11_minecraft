@@ -1,0 +1,7 @@
+
+#
+# files ignored by Git
+#
+
+# build directory
+/build/
