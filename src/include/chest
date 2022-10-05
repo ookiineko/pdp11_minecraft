@@ -9,4 +9,5 @@ include "Entities"
 
 
 int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int addr);
+
 void chest_flash_write(Entity armstand, vec3i flash_pos, vec3i flash_size, int addr, int val);

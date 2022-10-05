@@ -29,7 +29,7 @@ void addchar(int c) {
 
 }
 
-void specialchar(int c){
+void specialchar(int c) {
 
 }
 

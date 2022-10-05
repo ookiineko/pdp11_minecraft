@@ -1,10 +1,9 @@
-
 #
 # datapack definitions
 #
 
 [Datapack]
-namespace=pdp11
-description=A PDP-11 emulator for Minecraft.
-place location=8 4 8
-generate cleanup=true
+namespace = pdp11
+description = A PDP-11 emulator for Minecraft.
+place location = 8 4 8
+generate cleanup = true

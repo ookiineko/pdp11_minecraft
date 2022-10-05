@@ -1,11 +1,9 @@
-
 """
 generate chest write code
 """
 
-
 r = range(27)
-chunks = [r[x:x+9] for x in range(0, len(r), 9)]
+chunks = [r[x:x + 9] for x in range(0, len(r), 9)]
 
 for chunk in chunks:
     for i in chunk:
@@ -32,16 +30,11 @@ for chunk in chunks:
     print('}')
     print()
 
-print('//' * 64)
-print()
-
-for chunk in chunks:
-    print('void _chest_write_%d_to_%d(Entity armstand, int slot, int val);' % (chunk[0], chunk[-1]))
-print()
-
 print('macro void _chest_write(Entity armstand, int slot, int val) {')
 for chunk in chunks:
-    print((' else' if chunk == chunks[-1] else ((('    if' if chunk == chunks[0] else ' else if') + ' (slot < %d)') % chunks[chunks.index(chunk) + 1][0])) + ' {')
+    print((' else' if chunk == chunks[-1] else (
+            (('    if' if chunk == chunks[0] else ' else if') + ' (slot < %d)'
+             ) % chunks[chunks.index(chunk) + 1][0])) + ' {')
     print('        _chest_write_%d_to_%d(armstand, slot, val);' % (chunk[0], chunk[-1]))
     print('    }', end='')
 print()
