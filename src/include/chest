@@ -1,0 +1,165 @@
+
+// This is a translation of Julius Schmidt's PDP-11 emulator in JavaScript.
+// You can run that one in your browser: http://pdp11.aiju.de
+// (c) 2011, Julius Schmidt, JavaScript implementation, MIT License
+// (c) 2022, Ookiineko, ported to CBL, MIT License
+// Version 6 Unix (in the disk image) is available under the four-clause BSD license.
+
+include "Text"
+include "Entities"
+
+
+int _chest_read_0_to_8(Entity armstand, int slot);
+int _chest_read_9_to_17(Entity armstand, int slot);
+int _chest_read_18_to_26(Entity armstand, int slot);
+
+void _chest_write_0_to_8(Entity armstand, int slot, int val);
+void _chest_write_9_to_17(Entity armstand, int slot, int val);
+void _chest_write_18_to_26(Entity armstand, int slot, int val);
+
+macro int _chest_read(Entity armstand, int slot) {
+    if (slot < 9) {
+        return _chest_read_0_to_8(armstand, slot);
+    } else if (slot < 18) {
+        return _chest_read_9_to_17(armstand, slot);
+    } else {
+        return _chest_read_18_to_26(armstand, slot);
+    }
+}
+
+macro void _chest_write(Entity armstand, int slot, int val) {
+    if (slot < 9) {
+        _chest_write_0_to_8(armstand, slot, val);
+    } else if (slot < 18) {
+        _chest_write_9_to_17(armstand, slot, val);
+    } else {
+        _chest_write_18_to_26(armstand, slot, val);
+    }
+}
+
+macro int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int addr) {
+    armstand.pos = vec3d(0.0, 0.0, 0.0);
+    int flash_slice = flash_size.x * flash_size.z * 27;
+    if (addr < 0 || addr > (flash_slice * flash_size.y / 5 - 1)) {
+        Text err;
+        err << "chest[";
+        err.append_ref(addr);
+        err << "] -> illegal op.";
+        err.send_to_all();
+        return -1;
+    }
+    int flash_row = flash_size.x * 27;
+    int max_x = flash_size.x + flash_pos.x - 1;
+    int max_y = flash_size.y + flash_pos.y - 1;
+    int max_z = flash_size.z + flash_pos.z - 1;
+    int slots = addr * 5;
+    int y = (slots / flash_slice) + flash_pos.y;
+    armstand.pos += vec3i(0, y, 0);
+    int m = slots % flash_slice;
+    int z = (m / flash_row) + flash_pos.z;
+    armstand.pos += vec3i(0, 0, z);
+    m = m % flash_row;
+    int x = (m / 27) + flash_pos.x;
+    armstand.pos += vec3i(x, 0, 0);
+    m = m % 27;
+    int byte = 0;
+    int s;
+    int slot_count;
+    for (slot_count = 0; slot_count < 5; slot_count++) {
+        s = _chest_read(armstand, m);
+        if (s < 0) {
+            Text err;
+            err << "chest[";
+            err.append_ref(addr);
+            err << "] -> cannot read.";
+            err.send_to_all();
+            return -1;
+        }
+        byte += s;
+        m += 1;
+        if (m > 26) {
+            armstand.pos += vec3i(1, 0, 0);
+            m = 0;
+            x += 1;
+            if (x > max_x) {
+                armstand.pos += vec3i(-flash_size.x, 0, 1);
+                x = flash_pos.x;
+                z += 1;
+                if (z > max_z) {
+                    armstand.pos += vec3i(0, 1, -flash_size.z);
+                    z = flash_pos.z;
+                    y += 1;
+                    if (y > max_y)
+                        return -1;
+                }
+            }
+        }
+    }
+    if (byte > 0xff) {
+        Text err;
+        err << "chest[";
+        err.append_ref(addr);
+        err << "] = bad data.";
+        err.send_to_all();
+        return -1;
+    }
+    return byte;
+}
+
+macro void chest_flash_write(Entity armstand, vec3i flash_pos, vec3i flash_size, int addr, int val) {
+    armstand.pos = vec3d(0.0, 0.0, 0.0);
+    int flash_slice = flash_size.x * flash_size.z * 27;
+    if (addr < 0 || addr > flash_slice || val < 0 || val > 0xff) {
+        Text err;
+        err << "chest[";
+        err.append_ref(addr);
+        err << "] = ";
+        err.append_ref(val);
+        err << " (illegal op).";
+        err.send_to_all();
+        return;
+    }
+    int flash_row = flash_size.x * 27;
+    int max_x = flash_size.x + flash_pos.x - 1;
+    int max_y = flash_size.y + flash_pos.y - 1;
+    int max_z = flash_size.z + flash_pos.z - 1;
+    int slots = addr * 5;
+    int y = (slots / flash_slice) + flash_pos.y;
+    armstand.pos += vec3i(0, y, 0);
+    int m = slots % flash_slice;
+    int z = (m / flash_row) + flash_pos.z;
+    armstand.pos += vec3i(0, 0, z);
+    m = m % flash_row;
+    int x = (m / 27) + flash_pos.x;
+    armstand.pos += vec3i(x, 0, 0);
+    m = m % 27;
+    int byte = val;
+    int s;
+    int slot_count;
+    for (slot_count = 0; slot_count < 5; slot_count++) {
+        if (byte > 63)
+            s = 63;
+        else
+            s = byte;
+        byte -= s;
+        _chest_write(armstand, m, s);
+        m += 1;
+        if (m > 26) {
+            armstand.pos += vec3i(1, 0, 0);
+            m = 0;
+            x += 1;
+            if (x > max_x) {
+                armstand.pos += vec3i(-flash_size.x, 0, 1);
+                x = flash_pos.x;
+                z += 1;
+                if (z > max_z) {
+                    armstand.pos += vec3i(0, 1, -flash_size.z);
+                    z = flash_pos.z;
+                    y += 1;
+                    if (y > max_y)
+                        return;
+                }
+            }
+        }
+    }
+}

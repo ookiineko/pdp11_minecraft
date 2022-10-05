@@ -5,3 +5,7 @@
 
 # Datapack Definition
 *.dpd linguist-language=INI
+
+# Command Block Language (CBL)
+*.cbl linguist-language=C++
+**/include/** linguist-language=C++

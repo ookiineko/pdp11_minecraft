@@ -12,11 +12,13 @@ BUILD_DIR := build
 
 include src/Makefile
 
+all: $(DATAPACK)
+
 clean:
 		rm -rf $(BUILD_DIR)
 
 .PHONY: clean all
 
-$(BUILD_DIR)/%.c.o : %.c
+$(BUILD_DIR)/%.cbl.o : %.cbl
 		@ mkdir -p $(dir $@)
 		$(CC) -c $(CFLAGS) $< -o $@
