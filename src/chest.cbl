@@ -756,16 +756,16 @@ macro void _chest_write(Entity armstand, int slot, int val) {
 }
 
 int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int addr) {
-    armstand.pos = vec3d(0.0, 0.0, 0.0);
     int flash_slice = flash_size.x * flash_size.z * 27;
     if (addr < 0 || addr > (flash_slice * flash_size.y / 5 - 1)) {
         Text err;
         err << "chest[";
         err.append_ref(addr);
-        err << "] -> illegal op.";
+        err << "] -> (illegal op).";
         err.send_to_all();
         return -1;
     }
+    armstand.pos = vec3d(0.0, 0.0, 0.0);
     int flash_row = flash_size.x * 27;
     int max_x = flash_size.x + flash_pos.x - 1;
     int max_y = flash_size.y + flash_pos.y - 1;
@@ -796,23 +796,23 @@ int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int add
         byte += s;
         m += 1;
         if (m > 26) {
-            armstand.pos += vec3i(1, 0, 0);
             m = 0;
             x += 1;
             if (x > max_x) {
-                armstand.pos += vec3i(-flash_size.x, 0, 1);
                 x = flash_pos.x;
                 z += 1;
                 if (z > max_z) {
-                    armstand.pos += vec3i(0, 1, -flash_size.z);
                     if (y + 1 > max_y)
                         break;
                     else {
+                        armstand.pos += vec3i(0, 1, -flash_size.z);
                         z = flash_pos.z;
                         y += 1;
                     }
                 }
+                armstand.pos += vec3i(-flash_size.x, 0, 1);
             }
+            armstand.pos += vec3i(1, 0, 0);
         }
     }
     if (byte > 0xff) {
@@ -827,7 +827,6 @@ int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int add
 }
 
 void chest_flash_write(Entity armstand, vec3i flash_pos, vec3i flash_size, int addr, int val) {
-    armstand.pos = vec3d(0.0, 0.0, 0.0);
     int flash_slice = flash_size.x * flash_size.z * 27;
     if (addr < 0 || addr > (flash_slice * flash_size.y / 5 - 1) || val < 0 || val > 0xff) {
         Text err;
@@ -839,6 +838,7 @@ void chest_flash_write(Entity armstand, vec3i flash_pos, vec3i flash_size, int a
         err.send_to_all();
         return;
     }
+    armstand.pos = vec3d(0.0, 0.0, 0.0);
     int flash_row = flash_size.x * 27;
     int max_x = flash_size.x + flash_pos.x - 1;
     int max_y = flash_size.y + flash_pos.y - 1;
@@ -865,23 +865,23 @@ void chest_flash_write(Entity armstand, vec3i flash_pos, vec3i flash_size, int a
         _chest_write(armstand, m, s);
         m += 1;
         if (m > 26) {
-            armstand.pos += vec3i(1, 0, 0);
             m = 0;
             x += 1;
             if (x > max_x) {
-                armstand.pos += vec3i(-flash_size.x, 0, 1);
                 x = flash_pos.x;
                 z += 1;
                 if (z > max_z) {
-                    armstand.pos += vec3i(0, 1, -flash_size.z);
                     if (y + 1 > max_y)
                         return;
                     else {
+                        armstand.pos += vec3i(0, 1, -flash_size.z);
                         z = flash_pos.z;
                         y += 1;
                     }
                 }
+                armstand.pos += vec3i(-flash_size.x, 0, 1);
             }
+            armstand.pos += vec3i(1, 0, 0);
         }
     }
 }

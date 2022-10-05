@@ -7,6 +7,7 @@
 
 include "Events"
 include "Game"
+include "Entities"
 include "Text"
 
 include "include/chest"
