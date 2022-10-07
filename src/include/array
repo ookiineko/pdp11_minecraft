@@ -1,0 +1,59 @@
+include "Text"
+
+
+type Array {
+    _NBT var;
+    int length;
+
+    macro constructor() {
+        ir (this.var, _IRType("nbt_list int")) {
+            nbt_assign $arg0, $arg1
+        }
+        this.length = 0;
+    }
+
+    int _get_0_1(int index);
+    int _get_2_3(int index);
+    int _get_4_5(int index);
+    int _get_6_7(int index);
+
+    Maybe<int> operator [](int index);
+
+    void _set_0_1(int index, _NBT var);
+    void _set_2_3(int index, _NBT var);
+    void _set_4_5(int index, _NBT var);
+    void _set_6_7(int index, _NBT var);
+
+    void set(int index, int val);
+
+    macro void append(int val) {
+        if (this.length < 8) {
+            _NBT var;
+            ir (_IRType("nbtsubpath", var, "", "i32"), val, this.var, var) {
+                $arg0 = $arg1
+                nbt_var_append $arg2, $arg3
+            }
+            this.length++;
+        }  else {
+            Text err;
+            err << "array.append(";
+            err.append_ref(val);
+            err << ") (not implemented).";
+            err.send_to_all();
+        }
+    }
+
+    void _insert_0_1(int index, _NBT var);
+    void _insert_2_3(int index, _NBT var);
+    void _insert_4_5(int index, _NBT var);
+    void _insert_6_7(int index, _NBT var);
+
+    void insert(int index, int val);
+
+    void _pop_0_1(int index);
+    void _pop_2_3(int index);
+    void _pop_4_5(int index);
+    void _pop_6_7(int index);
+
+    Maybe<int> pop(int index);
+}

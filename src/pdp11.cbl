@@ -12,6 +12,7 @@ include "Text"
 include "include/rk05"
 include "include/cons"
 include "include/intr"
+include "include/array"
 include "include/mem"
 include "include/traps"
 include "include/disasm"
@@ -19,66 +20,50 @@ include "include/bootrom"
 
 
 type Interrupts {
-        int vec[8];
-        int pri[8];
-        int intr_count;
+        Array vec;
+        Array pri;
 
         constructor();
-        Maybe<Interrupt> get(int idx);
+        Maybe<Interrupt> operator [](int idx);
         void insert(int idx, Interrupt intr);
         Maybe<Interrupt> pop(int idx);
 }
 
 Interrupts::constructor() {
-    this.intr_count = 0;
+    this.vec = Array();
+    this.pri = Array();
 }
 
-Maybe<Interrupt> Interrupts::get(int idx) {
-    if (idx < 0 || idx >= this.intr_count) {
+Maybe<Interrupt> Interrupts::operator [](int idx) {
+    Maybe<int> vec = this.vec[idx];
+    Maybe<int> pri = this.pri[idx];
+    if (vec.isEmpty() || pri.isEmpty()) {
         Text err;
         err << "Interrupts::get(";
         err.append_ref(idx);
-        err << ") invalid index";
+        err << ") -> array error.";
         err.send_to_all();
     } else
-        return Interrupt(this.vec[idx], this.pri[idx]);
+        return Interrupt(vec.get(), pri.get());
 }
 
 void Interrupts::insert(int idx, Interrupt intr) {
-    if (idx < 0 || idx > this.intr_count || this.intr_count >= 8) {
-        Text err;
-        err << "Interrupts::get(";
-        err.append_ref(idx);
-        err << ") invalid index or list is full";
-        err.send_to_all();
-        return;
-    }
-    int i;
-    for (i = this.intr_count - 1; i >= idx; i--) {
-        this.vec[i + 1] = this.vec[i];
-        this.pri[i + 1] = this.pri[i];
-    }
-    this.vec[idx] = intr.vec;
-    this.pri[idx] = intr.pri;
-    this.intr_count++;
+    this.vec.insert(idx, intr.vec);
+    this.pri.insert(idx, intr.pri);
 }
 
 Maybe<Interrupt> Interrupts::pop(int idx) {
-    Maybe<Interrupt> ret = this.get(idx);
+    Maybe<Interrupt> ret = this[idx];
     if (ret.isEmpty()) {
         Text err;
         err << "Interrupts::pop(";
         err.append_ref(idx);
-        err << ") get() failed";
+        err << ") get() failed.";
         err.send_to_all();
     } else {
-        int i;
-        for (i = idx; i < this.intr_count - 1; i++) {
-            this.vec[i] = this.vec[i + 1];
-            this.pri[i] = this.pri[i + 1];
-        }
-        this.intr_count--;
-        return ret;
+        this.vec.pop(idx);
+        this.pri.pop(idx);
+        return ret.get();
     }
 }
 
