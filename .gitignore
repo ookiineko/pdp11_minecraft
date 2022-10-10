@@ -5,3 +5,9 @@
 
 # build directory
 /build/
+
+# disk image
+/**/*.img
+
+# Minecraft schematic
+/**/*.schem
