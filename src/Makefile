@@ -5,7 +5,7 @@
 
 SRC_DIR := src
 
-DPDFILE := $(SRC_DIR)/proj.dpd
+DPDFILE := mcc.dpd
 DATAPACK := $(BUILD_DIR)/datapack.zip
 
 SRCS := $(shell find $(SRC_DIR) -maxdepth 1 -type f -name '*.cbl' -printf '%p\n')
