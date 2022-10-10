@@ -12,11 +12,11 @@ include "include/chest"
 
 
 macro vec3i _get_mem_pos() {
-    return vec3i(8, 4, 8);
+    return vec3i(8, 8, 8);
 }
 
 macro vec3i _get_mem_size() {
-    return vec3i(156, 4, 156);
+    return vec3i(28, 128, 28);
 }
 
 macro int mem_read(Entity armstand, int addr) {

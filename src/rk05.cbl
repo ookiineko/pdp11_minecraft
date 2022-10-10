@@ -16,11 +16,11 @@ include "include/traps"
 
 
 macro vec3i _get_disk_pos() {
-    return vec3i(8, 16, 8);
+    return vec3i(8, 24, 8);
 }
 
 macro vec3i _get_disk_size() {
-    return vec3i(280, 4, 280);
+    return vec3i(55, 128, 55);
 }
 
 macro int _disk_read(Entity armstand, int addr) {

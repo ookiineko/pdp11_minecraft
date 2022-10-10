@@ -5,5 +5,5 @@
 [Datapack]
 namespace = pdp11
 description = A PDP-11 emulator for Minecraft.
-place location = 8 4 8
+place location = 8 1 8
 generate cleanup = true
