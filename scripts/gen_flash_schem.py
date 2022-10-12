@@ -193,21 +193,21 @@ def main():
         with open(image, 'rb') as fd:
             slot_cnt = 0
             x = y = z = 0
+            max_x = width - 1
+            max_z = height - 1
             entity = gen_chest_block_entity(x, y, z)
             items = entity['Items']
             for bytes_ in iter(lambda: fd.read(1), b''):
                 byte = bytes_[0]
                 for _ in range(5):  # five slots per byte
-                    if y > length - 1:
-                        raise TypeError('no space left on flash')
                     if slot_cnt > 26:
                         be.append(entity)
                         slot_cnt = 0
                         x += 1
-                        if x > width - 1:
+                        if x > max_x:
                             x = 0
                             z += 1
-                            if z > height - 1:
+                            if z > max_z:
                                 z = 0
                                 y += 1
                         entity = gen_chest_block_entity(x, y, z)
