@@ -5,7 +5,6 @@
 // (c) 2022, Ookiineko, ported to CBL, MIT License
 // Version 6 Unix (in the disk image) is available under the four-clause BSD license.
 
-include "include/disasmtable"
 include "include/mem"
 
 void disasm(int curPC, int curuser) {
