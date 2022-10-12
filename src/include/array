@@ -34,7 +34,7 @@ type Array {
                 nbt_var_append $arg2, $arg3
             }
             this.length++;
-        }  else {
+        } else {
             Text err;
             err << "array.append(";
             err.append_ref(val);

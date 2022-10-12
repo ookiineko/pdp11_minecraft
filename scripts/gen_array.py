@@ -220,7 +220,7 @@ for chunk in chunks:
 print()
 
 print('''        }
-    }  else {
+    } else {
         Text err;
         err << "array.pop(";
         err.append_ref(index);
