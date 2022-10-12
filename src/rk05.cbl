@@ -16,7 +16,7 @@ include "include/traps"
 
 
 macro vec3i _get_disk_pos() {
-    return vec3i(-50, 124, -50);
+    return vec3i(-43, 124, -43);
 }
 
 macro vec3i _get_disk_size() {

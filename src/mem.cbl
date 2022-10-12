@@ -12,7 +12,7 @@ include "include/chest"
 
 
 macro vec3i _get_mem_pos() {
-    return vec3i(8, 124, -8);
+    return vec3i(15, 124, 15);
 }
 
 macro vec3i _get_mem_size() {
