@@ -62,44 +62,33 @@ Schematic = schema(
     strict=True
 )
 
-# CompoundSchema for schematic root
-SchematicRoot = schema(
-    'SchematicRoot',
-    {
-        'Schematic': Schematic
-    },
-    strict=True
-)
 
-
-class SchematicFile(File, SchematicRoot):
+class SchematicFile(File, Schematic):
     """
     NBT file type for Minecraft schematic
     """
 
-    def __init__(self, schematic_root: dict = None, *args, **kwargs):
-        if schematic_root is None:
-            # empty schematic root with default values
-            schematic_root = {
-                'Schematic': {
-                    'PaletteMax': 0,
-                    'Palette': {},
-                    'Version': 2,
-                    'Length': 0,
-                    'Metadata': {
-                        'WEOffsetX': 0,
-                        'WEOffsetY': 0,
-                        'WEOffsetZ': 0
-                    },
-                    'Height': 0,
-                    'DataVersion': 2586,  # Minecraft Java Edition 1.16.5
-                    'BlockData': [],
-                    'BlockEntities': [],
-                    'Width': 0,
-                    'Offset': [0, 0, 0]
-                }
+    def __init__(self, schematic: dict = None, *args, **kwargs):
+        if schematic is None:
+            # empty schematic data with default values
+            schematic = {
+                'PaletteMax': 0,
+                'Palette': {},
+                'Version': 2,
+                'Length': 0,
+                'Metadata': {
+                    'WEOffsetX': 0,
+                    'WEOffsetY': 0,
+                    'WEOffsetZ': 0
+                },
+                'Height': 0,
+                'DataVersion': 2586,  # Minecraft Java Edition 1.16.5
+                'BlockData': [],
+                'BlockEntities': [],
+                'Width': 0,
+                'Offset': [0, 0, 0]
             }
-        super().__init__(schematic_root, *args, gzipped=True, **kwargs)
+        super().__init__(schematic, *args, gzipped=True, **kwargs)
 
     @classmethod
     def load(cls, *args, **kwargs):
@@ -174,14 +163,13 @@ def main():
         else:
             raise FileNotFoundError('image file "%s" not found' % image)
     schem = SchematicFile()
-    root = schem['Schematic']
-    root['PaletteMax'] = Int(1)
-    plt = root['Palette']
+    schem['PaletteMax'] = Int(1)
+    plt = schem['Palette']
     plt['minecraft:chest[facing=west,type=single,waterlogged=false]'] = Int(0)
-    root['Length'] = Short(width)
-    root['Height'] = Short(length)
-    root['BlockData'] = ByteArray(np.zeros(volume, 'byte'))
-    be = root['BlockEntities']
+    schem['Length'] = Short(width)
+    schem['Height'] = Short(length)
+    schem['BlockData'] = ByteArray(np.zeros(volume, 'byte'))
+    be = schem['BlockEntities']
     if image is None:
         t = 0
         d = volume // 20
@@ -210,18 +198,18 @@ def main():
             for bytes_ in iter(lambda: fd.read(1), b''):
                 byte = bytes_[0]
                 for _ in range(5):  # five slots per byte
+                    if y > length - 1:
+                        raise TypeError('no space left on flash')
                     if slot_cnt > 26:
                         be.append(entity)
                         slot_cnt = 0
                         x += 1
-                        if x > width:
+                        if x > width - 1:
                             x = 0
                             z += 1
-                            if z > height:
+                            if z > height - 1:
                                 z = 0
                                 y += 1
-                                if y > length:
-                                    raise TypeError('no space left on flash')
                         entity = gen_chest_block_entity(x, y, z)
                         items = entity['Items']
                     if byte > 63:
@@ -237,7 +225,7 @@ def main():
                     t = 0
                     print('flashing: %.2f%% completed' % (
                             (y * width * height + z * width + x) * 27 / 5 / file_bytes * 100))
-    root['Width'] = Short(height)
+    schem['Width'] = Short(height)
     print('saving! please wait patiently..')
     print_eta(75.12273406982422, 100352, volume)
     schem.save(output)
