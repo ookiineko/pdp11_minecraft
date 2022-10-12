@@ -4,7 +4,6 @@ generate array code
 
 from math import sqrt
 
-
 max_length = 8
 r = range(max_length)
 split = int(sqrt(max_length))
@@ -49,7 +48,7 @@ print('''            _NBT var;
                 nbt_var_append $arg2, $arg3
             }
             this.length++;
-        }  else {
+        } else {
             Text err;
             err << "array.append(";
             err.append_ref(val);
@@ -90,7 +89,8 @@ for chunk in chunks:
             $arg0 = $arg1
         }
         return val;
-    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i), end='')
+    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i),
+              end='')
     print()
     print('}')
     print()
@@ -100,7 +100,8 @@ print('''Maybe<int> Array::operator [](int index) {
 
 for chunk in chunks:
     print('''        %s
-            return this._get_%d_%d(index);''' % ('else' if chunk == chunks[-1] else '%s (index < %d)' % ('if' if chunk == chunks[0] else 'else if', chunk[-1] + 1), chunk[0], chunk[-1]))
+            return this._get_%d_%d(index);''' % ('else' if chunk == chunks[-1] else '%s (index < %d)' % (
+        'if' if chunk == chunks[0] else 'else if', chunk[-1] + 1), chunk[0], chunk[-1]))
 
 print('''    } else {
         Text err;
@@ -119,7 +120,8 @@ for chunk in chunks:
         ir (_IRType("nbtsubpath", this.var, "[%d]", "i32"), var) {
             $arg0 = $arg1
         }
-    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i), end='')
+    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i),
+              end='')
     print()
     print('}')
     print()
@@ -133,7 +135,8 @@ print('''void Array::set(int index, int val) {
 
 for chunk in chunks:
     print('''        %s
-            this._set_%d_%d(index, var);''' % ('else' if chunk == chunks[-1] else '%s (index < %d)' % ('if' if chunk == chunks[0] else 'else if', chunk[-1] + 1), chunk[0], chunk[-1]))
+            this._set_%d_%d(index, var);''' % ('else' if chunk == chunks[-1] else '%s (index < %d)' % (
+        'if' if chunk == chunks[0] else 'else if', chunk[-1] + 1), chunk[0], chunk[-1]))
 
 print('''    } else {
         Text err;
@@ -154,7 +157,8 @@ for chunk in chunks:
         ir (this.var, _IRType("nbt_val int, %d"), var) {
             nbt_var_insert $arg0, $arg1, $arg2
         }
-    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i), end='')
+    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i),
+              end='')
     print()
     print('}')
     print()
@@ -180,7 +184,8 @@ for chunk in chunks:
     print('''%s {
             this._insert_%d_%d(index, var);
             this.length++;
-        }''' % (' else' if chunk == chunks[-1] else '%s (index < %d)' % ('        if' if chunk == chunks[0] else ' else if', chunk[-1] + 1), chunk[0], chunk[-1]), end='')
+        }''' % (' else' if chunk == chunks[-1] else '%s (index < %d)' % (
+        '        if' if chunk == chunks[0] else ' else if', chunk[-1] + 1), chunk[0], chunk[-1]), end='')
 print()
 
 print('''    }
@@ -194,7 +199,8 @@ for chunk in chunks:
         ir (_IRType("nbtsubpath", this.var, "[%d]", "i32")) {
             nbt_remove $arg0
         }
-    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i), end='')
+    }''' % (' else' if i == chunk[-1] else '%s (index == %d)' % ('    if' if i == chunk[0] else ' else if', i), i),
+              end='')
     print()
     print('}')
     print()
@@ -209,7 +215,8 @@ for chunk in chunks:
                 this._pop_%d_%d(index);
                 this.length--;
                 return old.get();
-            }''' % (' else' if chunk == chunks[-1] else '%s (index < %d)' % ('            if' if chunk == chunks[0] else ' else if', chunk[-1] + 1), chunk[0], chunk[-1]), end='')
+            }''' % (' else' if chunk == chunks[-1] else '%s (index < %d)' % (
+        '            if' if chunk == chunks[0] else ' else if', chunk[-1] + 1), chunk[0], chunk[-1]), end='')
 print()
 
 print('''        }

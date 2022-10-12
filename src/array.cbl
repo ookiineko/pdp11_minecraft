@@ -301,7 +301,7 @@ Maybe<int> Array::pop(int index) {
                 return old.get();
             }
         }
-    }  else {
+    } else {
         Text err;
         err << "array.pop(";
         err.append_ref(index);
