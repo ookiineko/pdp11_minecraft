@@ -17,7 +17,7 @@ This code is a translation of [Julius Schmidt's PDP-11 emulator][Julius-Schmidt-
 
 ### Minecraft world
 
-Use [WorldEdit mod][WorldEdit] to import the [schematics](schematics) into your Minecraft world.
+Use [WorldEdit mod][WorldEdit] to import the [Schematics](schematics) into your Minecraft world.
 
 | Name   | Location        | Size      |
 | :----- | :-------------- | :-------- |
@@ -44,7 +44,7 @@ Run `stty -lcase` to enable lowercase output.
 
 - [amakukha/PyPDP11][PyPDP11], a successful port of the original JavaScript code for Python 3 with some enhancements which inspired this project.
 
-- [vberlier/nbtlib][nbtlib], a powerful python library to read and edit nbt data which this project uses to generate schematics.
+- [vberlier/nbtlib][nbtlib], a powerful Python library to read and edit NBT data which this project uses to generate Schematics.
 
 [Julius-Schmidt-s-PDP-11-emu]: http://pdp11.aiju.de
 [Command-Block-Assembly]: https://github.com/simon816/Command-Block-Assembly

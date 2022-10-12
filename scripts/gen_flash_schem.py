@@ -1,5 +1,5 @@
 """
-generate chest flash schematic with pre-burned data
+generate chest flash Schematic with pre-burned data
 """
 
 from argparse import ArgumentParser
@@ -10,7 +10,7 @@ from nbtlib.nbt import File
 from nbtlib.schema import schema
 from nbtlib.tag import Int, String, IntArray, Compound, Short, ByteArray, List, Byte
 
-# CompoundSchema for schematic metadata
+# CompoundSchema for Schematic metadata
 Metadata = schema(
     'Metadata',
     {
@@ -43,7 +43,7 @@ ChestBlockEntity = schema(
     strict=True
 )
 
-# CompoundSchema for Minecraft schematic
+# CompoundSchema for Minecraft Schematic
 Schematic = schema(
     'Schematic',
     {
@@ -65,12 +65,12 @@ Schematic = schema(
 
 class SchematicFile(File, Schematic):
     """
-    NBT file type for Minecraft schematic
+    NBT file type for Minecraft Schematic
     """
 
     def __init__(self, schematic: dict = None, *args, **kwargs):
         if schematic is None:
-            # empty schematic data with default values
+            # empty Schematic data with default values
             schematic = {
                 'PaletteMax': 0,
                 'Palette': {},
@@ -134,9 +134,9 @@ def main():
     """
     entrypoint
     """
-    parser = ArgumentParser(description='generate chest flash schematic with pre-burned data',
+    parser = ArgumentParser(description='generate chest flash Schematic with pre-burned data',
                             epilog='powered by vberlier/nbtlib.')
-    parser.add_argument('--output', '-o', type=str, help='output schematic file name', required=True)
+    parser.add_argument('--output', '-o', type=str, help='output Schematic file name', required=True)
     parser.add_argument('--size', '-s', type=int, nargs=3, help='flash size (width height length)', required=True)
     parser.add_argument('--image', '-i', type=str, help='image file to burn', default=None, required=False)
     ns = parser.parse_args()
