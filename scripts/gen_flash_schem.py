@@ -200,6 +200,13 @@ def main():
             for bytes_ in iter(lambda: fd.read(1), b''):
                 byte = bytes_[0]
                 for _ in range(5):  # five slots per byte
+                    if byte > 63:
+                        s = 63
+                    else:
+                        s = byte
+                    byte -= s
+                    items[slot_cnt]['Count'] = s + 1
+                    slot_cnt += 1
                     if slot_cnt > 26:
                         be.append(entity)
                         slot_cnt = 0
@@ -212,19 +219,18 @@ def main():
                                 y += 1
                         entity = gen_chest_block_entity(x, y, z)
                         items = entity['Items']
-                    if byte > 63:
-                        s = 63
-                    else:
-                        s = byte
-                    byte -= s
-                    items[slot_cnt]['Count'] = s + 1
-                    slot_cnt += 1
                 if t < d:
                     t += 1
                 else:
                     t = 0
                     print('flashing: %.2f%% completed' % (
                             (y * width * height + z * width + x) * 27 / 5 / file_bytes * 100))
+            # TODO: auto zeroing of flash tail blanks
+            # print('zeroing! please wait patiently..')
+            if slot_cnt != 0:
+                # for i in range(27 - slot_cnt):
+                #     items[slot_cnt + i] = 1
+                be.append(entity)
     schem['Width'] = Short(height)
     print('saving! please wait patiently..')
     print_eta(75.12273406982422, 100352, volume)
