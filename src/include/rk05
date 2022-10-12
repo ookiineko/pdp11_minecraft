@@ -4,3 +4,10 @@
 // (c) 2011, Julius Schmidt, JavaScript implementation, MIT License
 // (c) 2022, Ookiineko, ported to CBL, MIT License
 // Version 6 Unix (in the disk image) is available under the four-clause BSD license.
+
+
+int rkread16(int addr);
+
+int rkwrite16(int addr, int val);
+
+void rkreset();

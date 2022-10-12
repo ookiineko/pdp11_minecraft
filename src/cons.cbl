@@ -10,7 +10,6 @@ include "Game"
 include "Text"
 
 include "include/intr"
-include "include/traps"
 
 
 int TKS = 0;

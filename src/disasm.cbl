@@ -7,3 +7,7 @@
 
 include "include/disasmtable"
 include "include/mem"
+
+void disasm(int curPC, int curuser) {
+
+}

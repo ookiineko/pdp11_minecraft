@@ -5,16 +5,5 @@
 // (c) 2022, Ookiineko, ported to CBL, MIT License
 // Version 6 Unix (in the disk image) is available under the four-clause BSD license.
 
-type Interrupt {
-    int vec;
-    int pri;
 
-    constructor(int vec, int pri);
-}
-
-Interrupt::constructor(int vec, int pri) {
-    this.vec = vec;
-    this.pri = pri;
-}
-
-void interrupt(Interrupt intr);
+void interrupt(int vec, int pri);

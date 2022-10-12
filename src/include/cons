@@ -7,14 +7,6 @@
 
 void clearterminal();
 
-void writeterminal(int &msg);
-
-void addchar(int c);
-
-void specialchar(int c);
-
-int getchar();
-
 int consread16(int a);
 
 void conswrite16(int a, int v);

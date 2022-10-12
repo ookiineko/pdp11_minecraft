@@ -12,8 +12,10 @@ include "Text"
 
 include "include/chest"
 include "include/intr"
-include "include/traps"
+include "include/mem"
 
+
+////////////////////////////////////////////////////////////////
 
 macro vec3i _get_disk_pos() {
     return vec3i(-43, 124, -43);
@@ -33,4 +35,53 @@ void _disk_write(Entity armstand, int addr, int val) {
     vec3i disk_pos = _get_disk_pos();
     vec3i disk_size = _get_disk_size();
     chest_flash_write(armstand, disk_pos, disk_size, addr, val);
+}
+
+////////////////////////////////////////////////////////////////
+
+int RKDS;
+int RKER;
+int RKCS;
+int RKWC;
+int RKBA;
+int drive;
+int sector;
+int surface;
+int cylinder;
+
+
+int rkread16(int addr) {
+
+}
+
+void rknotready() {
+
+}
+
+void rkready() {
+
+}
+
+void rkerror(int code) {
+
+}
+
+void rkrwsec(int t) {
+
+}
+
+void rkgo() {
+
+}
+
+int rkwrite16(int addr, int val) {
+
+}
+
+void rkreset() {
+
+}
+
+void rkinit() {
+
 }
