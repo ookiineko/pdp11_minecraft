@@ -13,6 +13,7 @@ include "include/rk05"
 include "include/cons"
 include "include/intr"
 include "include/array"
+include "include/helper"
 include "include/mem"
 include "include/disasm"
 
@@ -343,9 +344,26 @@ void stop() {
 
 }
 
+////////////////////////////////////////////////////////////////
+
 // call this once before running anything
 void init() {
+    raw_command("execute unless entity @e[tag=pdp11_cons_helper,limit=1] run summon armor_stand 0 1 0 {Tags:[\"pdp11_cons_helper\"],ArmorItems:[{id:\"minecraft:stone\",Count:1b}],NoAI:1b,Invisible:1b,Small:0b,NoGravity:1b,Marker:1b,Invulnerable:1b,NoBasePlate:1b}");
+    raw_command("execute unless entity @e[tag=pdp11_mem_helper,limit=1] run summon armor_stand 0 1 0 {Tags:[\"pdp11_mem_helper\"],ArmorItems:[{id:\"minecraft:stone\",Count:1b}],NoAI:1b,Invisible:1b,Small:0b,NoGravity:1b,Marker:1b,Invulnerable:1b,NoBasePlate:1b}");
+    raw_command("execute unless entity @e[tag=pdp11_rk05_helper,limit=1] run summon armor_stand 0 1 0 {Tags:[\"pdp11_rk05_helper\"],ArmorItems:[{id:\"minecraft:stone\",Count:1b}],NoAI:1b,Invisible:1b,Small:0b,NoGravity:1b,Marker:1b,Invulnerable:1b,NoBasePlate:1b}");
+    get_helper_cons();
+    get_helper_mem();
+    get_helper_rk05();
     // TODO: port IPS and RK busy indicators
     reset();
     rkreset();
 }
+
+// call this before calling cleanup
+void cleanup_before() {
+    kill_helper_cons();
+    kill_helper_mem();
+    kill_helper_rk05();
+}
+
+////////////////////////////////////////////////////////////////

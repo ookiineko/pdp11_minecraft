@@ -17,6 +17,23 @@ include "include/mem"
 
 ////////////////////////////////////////////////////////////////
 
+Maybe<Entity> helper_rk05;
+
+macro Maybe<Entity> _get_helper_rk05() {
+    return (filter (e in Game.entities) {
+        e.has_tag("pdp11_rk05_helper");
+    }).first();
+}
+
+void get_helper_rk05() {
+    helper_rk05 = _get_helper_rk05();
+}
+
+void kill_helper_rk05() {
+    if (!helper_rk05.isEmpty())
+        helper_rk05.get().kill();
+}
+
 macro vec3i _get_disk_pos() {
     return vec3i(-43, 124, -43);
 }
@@ -25,16 +42,34 @@ macro vec3i _get_disk_size() {
     return vec3i(55, 128, 55);
 }
 
-int _disk_read(Entity armstand, int addr) {
+int _disk_read(int addr) {
+    if (helper_rk05.isEmpty()) {
+        Text err;
+        err << "_disk_read(";
+        err.append_ref(addr);
+        err << ") -> (missing helper).";
+        err.send_to_all();
+        return -1;
+    }
     vec3i disk_pos = _get_disk_pos();
     vec3i disk_size = _get_disk_size();
-    return chest_flash_read(armstand, disk_pos, disk_size, addr);
+    return chest_flash_read(helper_rk05.get(), disk_pos, disk_size, addr);
 }
 
-void _disk_write(Entity armstand, int addr, int val) {
+void _disk_write(int addr, int val) {
+    if (helper_rk05.isEmpty()) {
+        Text err;
+        err << "_disk_write(";
+        err.append_ref(addr);
+        err << ", ";
+        err.append_ref(val);
+        err << ") (missing helper).";
+        err.send_to_all();
+        return;
+    }
     vec3i disk_pos = _get_disk_pos();
     vec3i disk_size = _get_disk_size();
-    chest_flash_write(armstand, disk_pos, disk_size, addr, val);
+    chest_flash_write(helper_rk05.get(), disk_pos, disk_size, addr, val);
 }
 
 ////////////////////////////////////////////////////////////////

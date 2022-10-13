@@ -6,6 +6,15 @@
 // Version 6 Unix (in the disk image) is available under the four-clause BSD license.
 
 
-int mem_read(int addr);
+void get_helper_cons();
 
-void mem_write(int addr, int val);
+void get_helper_mem();
+
+void get_helper_rk05();
+
+
+void kill_helper_cons();
+
+void kill_helper_mem();
+
+void kill_helper_rk05();
