@@ -38,8 +38,6 @@ Use `/function pdp11:stop` to stop the emulator, use `/function pdp11:reset` to 
 
 Unix V6 used `chdir` command instead of `cd`.
 
-Run `stty -lcase` to enable lowercase output.
-
 # See also
 
 - [simon816/Command-Block-Assembly][Command-Block-Assembly], this project offers the high-level language compilers, assembler and Command IR compiler which this project uses.
