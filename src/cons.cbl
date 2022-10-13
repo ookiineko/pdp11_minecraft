@@ -17,6 +17,9 @@ include "include/intr"
 
 Maybe<Entity> helper_cons;
 
+int cursor_y;
+int cursor_z;
+
 macro Maybe<Entity> _get_helper_cons() {
     return (filter (e in Game.entities) {
         e.has_tag("pdp11_cons_helper");
@@ -32,6 +35,18 @@ void kill_helper_cons() {
         helper_cons.get().kill();
 }
 
+macro vec3d _get_cons_pos() {
+    return vec3d(14.0, 15.0, -16.0);
+}
+
+macro vec3i _get_cons_posi() {
+    return vec3i(14, 15, -16);
+}
+
+macro vec3i _get_cons_size() {
+    return vec3i(1, 16, 32);
+}
+
 ////////////////////////////////////////////////////////////////
 
 int TKS = 0;
@@ -39,7 +54,22 @@ int TPS = 0;
 int keybuf = 0;
 
 void clearterminal() {
-
+    vec3d pos = _get_cons_pos();
+    vec3i posi = _get_cons_posi();
+    if (helper_cons.isEmpty()) {
+        Text err;
+        err << "clearterminal() (missing helper).";
+        err.send_to_all();
+        return;
+    }
+    Entity armstand = helper_cons.get();
+    armstand.pos = pos;
+    cursor_y = posi.y;
+    cursor_z = posi.z;
+    raw_command("fill 14 0 -16 14 15 15 minecraft:air"); // clear TTY text
+    ////////////////////////////////
+    TKS = 0;
+    TPS = 128; // 1 << 7
 }
 
 void write_terminal_punc_p0(Entity armstand, int code) {
@@ -363,7 +393,7 @@ void writeterminal(int msg) {
     if (msg < 32) // non-visible chars
         return;
     else if (msg == 32) { // space
-        // TODO: move cursor
+        // do nothing
     } else if (msg < 43) // punctuations
         write_terminal_punc_p0(armstand, msg); // !..*
     else if (msg < 48) // punctuations
@@ -396,7 +426,25 @@ void writeterminal(int msg) {
         err.append_ref(msg);
         err << ") (non-ASCII).";
         err.send_to_all();
+        return;
     }
+    vec3i posi = _get_cons_posi();
+    vec3i size = _get_cons_size();
+    int max_z = posi.z + size.z - 1;
+    int low_y = posi.y - size.y + 1;
+    cursor_z += 1;
+    if (cursor_z > max_z) {
+        cursor_z = posi.z;
+        if (cursor_y - 1 < low_y) {
+            raw_command("clone 14 0 -16 14 14 15 14 1 -16");
+            raw_command("fill 14 0 -16 14 0 15 minecraft:air");
+        } else {
+            cursor_y -= 1;
+            armstand.pos += (0, -1, 0);
+        }
+        armstand.pos += (0, 0, -size.z);
+    }
+    armstand.pos += vec3i(0, 0, 1);
 }
 
 void addchar(int c) {
