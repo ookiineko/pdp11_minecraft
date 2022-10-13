@@ -212,7 +212,9 @@ void writeterminal(int msg) {
         return;
     }
     Entity armstand = helper_cons.get();
-    if ((msg > 47 && msg < 58)) // numbers
+    if (msg < 33) // non-visible chars
+        return;
+    else if ((msg > 47 && msg < 58)) // numbers
         write_terminal_0_9(armstand, msg);  // 0..9
     else if ((msg > 64 && msg < 91) || (msg > 96 && msg < 123)) { // alphabets
         if (msg < 75 || (msg > 96 && msg < 107)) // Aa..Jj
