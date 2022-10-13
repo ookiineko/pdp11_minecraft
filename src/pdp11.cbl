@@ -362,7 +362,7 @@ void init() {
 
 // call this before calling cleanup
 void cleanup_before() {
-    raw_command("fill 15 0 -16 15 15 15 minecraft:air"); // remove TTY display
+    raw_command("fill 15 0 -16 14 15 15 minecraft:air"); // remove TTY display
     kill_helper_cons();
     kill_helper_mem();
     kill_helper_rk05();
