@@ -42,6 +42,74 @@ void clearterminal() {
 
 }
 
+void write_terminal_punc_p0(Entity armstand, int code) {
+    if (code == 33) { // !
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"cs\",Color:15},{Pattern:\"ms\",Color:0},{Pattern:\"bo\",Color:0},{Pattern:\"bs\",Color:0}]}");
+        }
+    } else if (code == 34) { // "
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"tr\",Color:15},{Pattern:\"tl\",Color:15},{Pattern:\"cs\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 35) { // #
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"cr\",Color:15},{Pattern:\"ms\",Color:15},{Pattern:\"sc\",Color:0},{Pattern:\"cs\",Color:0},{Pattern:\"pig\",Color:15},{Pattern:\"ss\",Color:0},{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0}]}");
+        }
+    } else if (code == 36) { // $
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"bs\",Color:15},{Pattern:\"ts\",Color:15},{Pattern:\"mr\",Color:0},{Pattern:\"drs\",Color:15},{Pattern:\"cbo\",Color:0},{Pattern:\"bo\",Color:0},{Pattern:\"cs\",Color:0},{Pattern:\"cs\",Color:0},{Pattern:\"cs\",Color:15}]}");
+        }
+    } else if (code == 37) { // %
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"tl\",Color:15},{Pattern:\"br\",Color:15},{Pattern:\"cbo\",Color:0},{Pattern:\"mr\",Color:0},{Pattern:\"dls\",Color:15},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 38) { // &
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"bs\",Color:15},{Pattern:\"ts\",Color:15},{Pattern:\"mr\",Color:0},{Pattern:\"cr\",Color:15},{Pattern:\"cbo\",Color:0},{Pattern:\"br\",Color:15},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 39) { // '
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"ts\",Color:15},{Pattern:\"ls\",Color:0},{Pattern:\"rs\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 40) { // (
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"drs\",Color:15},{Pattern:\"dls\",Color:15},{Pattern:\"vh\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 41) { // )
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"drs\",Color:15},{Pattern:\"dls\",Color:15},{Pattern:\"vhr\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else { // (code == 42) *
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"cr\",Color:15},{Pattern:\"ms\",Color:15},{Pattern:\"ts\",Color:0},{Pattern:\"bs\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    }
+}
+
+void write_terminal_punc_p1(Entity armstand, int code) {
+    if (code == 43) { // +
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"sc\",Color:15},{Pattern:\"bo\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bs\",Color:0}]}");
+        }
+    } else if (code == 44) { // ,
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"bs\",Color:15},{Pattern:\"bts\",Color:0},{Pattern:\"cs\",Color:0},{Pattern:\"vhr\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 45) { // -
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"ms\",Color:15},{Pattern:\"hhb\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    } else if (code == 46) { // .
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"bl\",Color:15},{Pattern:\"bo\",Color:0},{Pattern:\"ms\",Color:0},{Pattern:\"cs\",Color:0}]}");
+        }
+    } else { // (code == 47) /
+        at (armstand) {
+            raw_command("setblock ~ ~ ~ minecraft:white_wall_banner[facing=west]{Patterns:[{Pattern:\"dls\",Color:15},{Pattern:\"ld\",Color:0},{Pattern:\"bo\",Color:0}]}");
+        }
+    }
+}
+
 void write_terminal_0_9(Entity armstand, int code) {
     if (code == 48) { // 0
         at (armstand) {
@@ -216,20 +284,37 @@ void writeterminal(int msg) {
         return;
     else if (msg == 32) { // space
         // TODO: move cursor
-    } else if ((msg > 47 && msg < 58)) // numbers
+    } else if (msg < 43) // punctuations
+        write_terminal_punc_p0(armstand, msg); // !..*
+    else if (msg < 48) // punctuations
+        write_terminal_punc_p1(armstand, msg); // +../
+    else if (msg < 58) // numbers
         write_terminal_0_9(armstand, msg);  // 0..9
-    else if ((msg > 64 && msg < 91) || (msg > 96 && msg < 123)) { // alphabets
-        if (msg < 75 || (msg > 96 && msg < 107)) // Aa..Jj
+    else if (msg < 65) // punctuations
+        write_terminal_punc_p2(armstand, msg); // :..@
+    else if ( msg < 91 || (msg > 96 && msg < 123)) { // uppercase alphabets
+        if (msg < 75) // A..J
             writeterminal_Aa_Jj(armstand, msg);
-        else if (msg < 85 || (msg > 106 && msg < 117)) // Kk..Tt
+        else if (msg < 85) // K..T
             writeterminal_Kk_Tt(armstand, msg);
-        else // Uu..Zz
+        else // U..Z
             writeterminal_Uu_Zz(armstand, msg);
+    } else if (msg < 97) { // punctuations
+        write_terminal_punc_p3(armstand, msg); // [..`
+    } else if (msg < 123) { // lowercase alphabets
+        if (msg < 107)) // a..j
+            writeterminal_Aa_Jj(armstand, msg);
+        else if (msg < 117)) // k..t
+            writeterminal_Kk_Tt(armstand, msg);
+        else // u..z
+            writeterminal_Uu_Zz(armstand, msg);
+    } else if (msg < 127) { // punctuations
+        write_terminal_punc_p4(armstand, msg); // {..~
     } else {
         Text err;
         err << "writeterminal(";
         err.append_ref(msg);
-        err << ") (not implmented).";
+        err << ") (non-ASCII).";
         err.send_to_all();
     }
 }
