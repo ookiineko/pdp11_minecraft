@@ -789,7 +789,7 @@ int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int add
             Text err;
             err << "chest[";
             err.append_ref(addr);
-            err << "] -> cannot read.";
+            err << "] -> (cannot read).";
             err.send_to_all();
             return -1;
         }
@@ -819,7 +819,7 @@ int chest_flash_read(Entity armstand, vec3i flash_pos, vec3i flash_size, int add
         Text err;
         err << "chest[";
         err.append_ref(addr);
-        err << "] = bad data.";
+        err << "] -> (bad data).";
         err.send_to_all();
         return -1;
     }

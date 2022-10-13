@@ -49,7 +49,7 @@ Maybe<Interrupt> Interrupts::operator [](int idx) {
         Text err;
         err << "Interrupts::get(";
         err.append_ref(idx);
-        err << ") -> array error.";
+        err << ") -> (array error).";
         err.send_to_all();
     } else
         return Interrupt(vec.get(), pri.get());
@@ -66,7 +66,7 @@ Maybe<Interrupt> Interrupts::pop(int idx) {
         Text err;
         err << "Interrupts::pop(";
         err.append_ref(idx);
-        err << ") get() failed.";
+        err << ") (get() failed).";
         err.send_to_all();
     } else {
         this.vec.pop(idx);
@@ -117,18 +117,51 @@ type Pages {
             int ed = this.ed[idx];
             Page page(par, pdr, addr, len, read, write, ed);
             return page;
+        } else {
+            Text err;
+            err << "Pages::get(";
+            err.append_ref(idx);
+            err << ") -> (index error).";
+            err.send_to_all();
         }
     }
 
     void set(int idx, Page page) {
+        int par = page.par;
+        int pdr = page.pdr;
+        int addr = page.addr;
+        int len = page.len;
+        int read = page.read;
+        int write = page.write;
+        int ed = page.ed;
         if (idx > 0 && idx < 16) {
-            this.par[idx] = page.par;
-            this.pdr[idx] = page.pdr;
-            this.addr[idx] = page.addr;
-            this.len[idx] = page.len;
-            this.read[idx] = page.read;
-            this.write[idx] = page.write;
-            this.ed[idx] = page.ed;
+            this.par[idx] = par;
+            this.pdr[idx] = pdr;
+            this.addr[idx] = addr;
+            this.len[idx] = len;
+            this.read[idx] = read;
+            this.write[idx] = write;
+            this.ed[idx] = ed;
+        } else {
+            Text err;
+            err << "Pages::set(";
+            err.append_ref(idx);
+            err << ", Page(";
+            err.append_ref(par);
+            err << ", ";
+            err.append_ref(pdr);
+            err << ", ";
+            err.append_ref(addr);
+            err << ", ";
+            err.append_ref(len);
+            err << ", ";
+            err.append_ref(read);
+            err << ", ";
+            err.append_ref(write);
+            err << ", ";
+            err.append_ref(ed);
+            err << ")) -> (index error).";
+            err.send_to_all();
         }
     }
 }

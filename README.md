@@ -20,9 +20,11 @@ This code is a translation of [Julius Schmidt's PDP-11 emulator][Julius-Schmidt-
 Use [WorldEdit mod][WorldEdit] to import the [Schematics](schematics) into your Minecraft world.
 
 | Name   | Location        | Size      |
-| :----- | :-------------- | :-------- |
+|--------|-----------------|-----------|
 | Memory | (15, 124, 15)   | 28x28x128 |
 | RK0    | (-43, 124, -43) | 55x55x128 |
+
+###### Notice: You'll need at least 12G of RAM for your game (or server) to load these schematics.
 
 ### Running
 
