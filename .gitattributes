@@ -11,5 +11,4 @@
 **/include/**/* linguist-language=C++
 
 # hardcode
-src/chest.cbl linguist-generated
 src/array.cbl linguist-generated
