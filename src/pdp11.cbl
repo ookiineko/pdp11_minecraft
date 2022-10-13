@@ -354,7 +354,7 @@ void panic() {
 
 ////////////////////////////////////////////////////////////////
 
-// call this once before running anything
+[Event Events.load]
 void init() {
     raw_command("execute unless entity @e[tag=pdp11_cons_helper,limit=1] run summon armor_stand 0 1 0 {Tags:[\"pdp11_cons_helper\"],ArmorItems:[{id:\"minecraft:stone\",Count:1b}],NoAI:1b,Invisible:1b,Small:0b,NoGravity:1b,Marker:1b,Invulnerable:1b,NoBasePlate:1b}");
     raw_command("execute unless entity @e[tag=pdp11_mem_helper,limit=1] run summon armor_stand 0 1 0 {Tags:[\"pdp11_mem_helper\"],ArmorItems:[{id:\"minecraft:stone\",Count:1b}],NoAI:1b,Invisible:1b,Small:0b,NoGravity:1b,Marker:1b,Invulnerable:1b,NoBasePlate:1b}");

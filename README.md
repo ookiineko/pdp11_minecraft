@@ -28,11 +28,15 @@ Use [WorldEdit mod][WorldEdit] to import the [Schematics](schematics) into your 
 
 ### Running
 
-Execute `/function pdp11:init` in game to initialize the emulator, then execute `/function pdp11:run` to start the emulator.
+Execute `/function pdp11:run` to start the emulator.
 
-### Stopping
+### Stop & Reset
 
-Use `/function pdp11:stop` to stop the emulator, use `/function pdp11:reset` to reset the emulator.
+Execute `/function pdp11:stop` to stop the emulator, and use `/function pdp11:reset` to reset the emulator.
+
+### Cleaning up
+
+Before running the cleanup function, please run `pdp11:cleanup_before` first.
 
 ## Note
 

@@ -48,6 +48,8 @@ macro vec3i _get_cons_size() {
     return vec3i(1, 16, 32);
 }
 
+int queue = 0;
+
 ////////////////////////////////////////////////////////////////
 
 int TKS = 0;
@@ -496,7 +498,7 @@ int consread16(int a) {
     }
 }
 
-async void conswrite16(int a, int v) {
+void conswrite16(int a, int v) {
     if (a == 0777560) {
         if(v & (1<<6))
             TKS |= 1<<6;
@@ -514,10 +516,7 @@ async void conswrite16(int a, int v) {
         if (v != 13)
             writeterminal(v & 0x7F);
         TPS &= 0xff7f;
-        await Game.tick();
-        TPS |= 0x80;
-        if(TPS & (1<<6))
-            interrupt(0064 /*INTTTYOUT*/, 4);
+        queue += 1;
     } else {
         Text err;
         err << "conswrite16(";
@@ -527,5 +526,17 @@ async void conswrite16(int a, int v) {
         err << ".";
         err.send_to_all();
         panic();
+    }
+}
+
+////////////////////////////////////////////////////////////////
+
+[Event Events.tick]
+void queue_tick() {
+    if (queue > 0) {
+        TPS |= 0x80;
+        if(TPS & (1<<6))
+            interrupt(0064 /*INTTTYOUT*/, 4);
+        queue -= 1;
     }
 }

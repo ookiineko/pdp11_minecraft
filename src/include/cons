@@ -9,4 +9,4 @@ void clearterminal();
 
 int consread16(int a);
 
-async void conswrite16(int a, int v);
+void conswrite16(int a, int v);
