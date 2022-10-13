@@ -5,8 +5,5 @@
 // (c) 2022, Ookiineko, ported to CBL, MIT License
 // Version 6 Unix (in the disk image) is available under the four-clause BSD license.
 
-void clearterminal();
 
-int consread16(int a);
-
-async void conswrite16(int a, int v);
+extern int crashed;

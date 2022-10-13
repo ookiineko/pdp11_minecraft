@@ -11,6 +11,7 @@ include "Entities"
 include "Text"
 
 include "include/intr"
+include "include/panic"
 
 
 ////////////////////////////////////////////////////////////////
@@ -448,21 +449,83 @@ void writeterminal(int msg) {
 }
 
 void addchar(int c) {
-
+    TKS |= 0x80;
+    keybuf = c;
+    if(TKS & (1<<6))
+        interrupt(0060 /*INTTTYIN*/, 4);
 }
 
 void specialchar(int c) {
-
+    if (c == 42)
+        keybuf = 4;
+    else if (c == 19)
+        keybuf = 034;
+    else if (c == 46)
+        keybuf = 127;
+    else
+        return;
+    TKS |= 0x80;
+    if(TKS & (1<<6))
+        interrupt(0060 /*INTTTYIN*/, 4);
 }
 
 int getchar() {
-
+    if(TKS & 0x80) {
+        TKS &= 0xff7e;
+        return keybuf;
+    }
+    return 0;
 }
 
 int consread16(int a) {
-
+    if (a == 0777560)
+        return TKS;
+    else if (a == 0777562)
+        return getchar();
+    else if (a == 0777564)
+        return TPS;
+    else if (a == 0777566)
+        return 0;
+    else {
+        Text err;
+        err << "consread16: read from invalid address ";
+        err.append_ref(a);
+        err << ".";
+        err.send_to_all();
+        panic();
+    }
 }
 
-void conswrite16(int a, int v) {
-
+async void conswrite16(int a, int v) {
+    if (a == 0777560) {
+        if(v & (1<<6))
+            TKS |= 1<<6;
+        else
+            TKS &= ~(1<<6);
+    } else if (a == 0777564) {
+        if(v & (1<<6))
+            TPS |= 1<<6;
+        else
+            TPS &= ~(1<<6);
+    } else if (a == 0777566) {
+        v &= 0xFF;
+        if(!(TPS & 0x80))
+            return;
+        if (v != 13)
+            writeterminal(v & 0x7F);
+        TPS &= 0xff7f;
+        await Game.tick();
+        TPS |= 0x80;
+        if(TPS & (1<<6))
+            interrupt(0064 /*INTTTYOUT*/, 4);
+    } else {
+        Text err;
+        err << "conswrite16(";
+        err.append_ref(v);
+        err << "): write to invalid address ";
+        err.append_ref(a);
+        err << ".";
+        err.send_to_all();
+        panic();
+    }
 }

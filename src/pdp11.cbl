@@ -76,6 +76,8 @@ Maybe<Interrupt> Interrupts::pop(int idx) {
     }
 }
 
+int crashed = 0;
+
 ////////////////
 
 type Page {
@@ -329,7 +331,7 @@ void step() {
 }
 
 void reset() {
-
+    crashed = 0;
 }
 
 void nsteps(int n) {
@@ -342,6 +344,12 @@ void run() {
 
 void stop() {
 
+}
+
+void panic() {
+    printstate();
+    stop();
+    crashed = 1;
 }
 
 ////////////////////////////////////////////////////////////////
